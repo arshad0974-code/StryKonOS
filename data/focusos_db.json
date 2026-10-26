@@ -1,0 +1,89 @@
+{
+  "users": [
+    {
+      "id": "usr_alex_vance",
+      "name": "Arshad Qazi",
+      "email": "pak40884@gmail.com",
+      "agencyName": "Strykon",
+      "role": "Solo Operator & Performance Strategist",
+      "token": "token_demo_operator",
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    }
+  ],
+  "clients": [],
+  "projects": [],
+  "tasks": [],
+  "focusSessions": [],
+  "distractions": [],
+  "habits": [
+    {
+      "id": "hab_1",
+      "userId": "usr_alex_vance",
+      "title": "Morning Daily Planning & Top 3 Clarification",
+      "category": "planning",
+      "targetFrequency": "weekdays",
+      "dailyTargetMinutes": 15,
+      "archived": false,
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    },
+    {
+      "id": "hab_2",
+      "userId": "usr_alex_vance",
+      "title": "Deep Work Sprint (90-Minute Uninterrupted Block)",
+      "category": "deep_work",
+      "targetFrequency": "weekdays",
+      "dailyTargetMinutes": 90,
+      "archived": false,
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    },
+    {
+      "id": "hab_3",
+      "userId": "usr_alex_vance",
+      "title": "Agency Sales & Outreach Pipeline Sprint",
+      "category": "sales_outreach",
+      "targetFrequency": "weekdays",
+      "dailyTargetMinutes": 45,
+      "archived": false,
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    },
+    {
+      "id": "hab_4",
+      "userId": "usr_alex_vance",
+      "title": "Midday Distraction Audit & Tab Reset",
+      "category": "custom",
+      "targetFrequency": "daily",
+      "dailyTargetMinutes": 10,
+      "archived": false,
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    },
+    {
+      "id": "hab_5",
+      "userId": "usr_alex_vance",
+      "title": "End-of-Day Shutdown & Tomorrow Time-Blocking",
+      "category": "eod_review",
+      "targetFrequency": "weekdays",
+      "dailyTargetMinutes": 15,
+      "archived": false,
+      "createdAt": "2026-10-26T13:51:17.705Z"
+    }
+  ],
+  "habitCompletions": [],
+  "timeBlocks": [],
+  "dailyReviews": [],
+  "settings": [
+    {
+      "userId": "usr_alex_vance",
+      "workStartHour": 8,
+      "workEndHour": 18,
+      "dailyFocusTargetMinutes": 240,
+      "pomodoroFocusMinutes": 25,
+      "pomodoroBreakMinutes": 5,
+      "longBreakMinutes": 15,
+      "scoreWeightPriority": 40,
+      "scoreWeightFocus": 40,
+      "scoreWeightSchedule": 20,
+      "soundEnabled": true,
+      "theme": "dark"
+    }
+  ]
+}

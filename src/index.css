@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  color-scheme: dark;
+}
+
+html, body {
+  color-scheme: dark;
+  font-family: var(--font-sans);
+}
+
+/* Force dark theme styling on all native select dropdowns and options */
+select {
+  color-scheme: dark !important;
+  background-color: #171717 !important;
+  color: #f4f4f5 !important;
+}
+
+select option,
+select optgroup {
+  background-color: #18181b !important;
+  color: #f4f4f5 !important;
+  padding: 8px 12px !important;
+}
+
+select option:checked {
+  background-color: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+select option:hover {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+@layer base {
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.4);
+  }
+}

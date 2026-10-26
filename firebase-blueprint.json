@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "user": {
+      "title": "User",
+      "description": "Registered operator profile and agency identity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "agencyName": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "createdAt"]
+    },
+    "task": {
+      "title": "Task",
+      "description": "Actionable client deliverable or personal work item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 250 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "category": { "type": "string", "enum": ["client", "personal"] },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "projectId": { "type": "string", "maxLength": 128 },
+        "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "status": { "type": "string", "enum": ["backlog", "todo", "in_progress", "in_review", "completed"] },
+        "estimatedDurationMinutes": { "type": "number" },
+        "actualDurationMinutes": { "type": "number" },
+        "isDailyTop3": { "type": "boolean" },
+        "scheduledDate": { "type": "string", "maxLength": 20 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "category", "priority", "status", "createdAt"]
+    },
+    "client": {
+      "title": "Client",
+      "description": "Digital marketing client account",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "businessName": { "type": "string", "maxLength": 150 },
+        "contactEmail": { "type": "string", "format": "email", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["active", "retainer", "lead", "inactive"] },
+        "monthlyValue": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "name", "businessName", "status", "createdAt"]
+    },
+    "project": {
+      "title": "Project",
+      "description": "Client campaign or internal growth initiative",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 1500 },
+        "status": { "type": "string", "enum": ["planning", "in_progress", "in_review", "completed", "on_hold"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "name", "status", "createdAt"]
+    },
+    "focusSession": {
+      "title": "FocusSession",
+      "description": "Pomodoro or deep work concentration block",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "taskId": { "type": "string", "maxLength": 128 },
+        "targetMinutes": { "type": "number" },
+        "actualElapsedSeconds": { "type": "number" },
+        "status": { "type": "string", "enum": ["completed", "interrupted", "cancelled"] },
+        "startTime": { "type": "string", "format": "date-time" },
+        "endTime": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "targetMinutes", "actualElapsedSeconds", "status", "startTime", "endTime"]
+    },
+    "distraction": {
+      "title": "Distraction",
+      "description": "Interruption log during work",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "category": { "type": "string", "maxLength": 50 },
+        "reason": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "userId", "timestamp", "category"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "Isolated user profile document"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "task",
+      "description": "User scoped deliverables and tasks"
+    },
+    "/users/{userId}/clients/{clientId}": {
+      "schema": "client",
+      "description": "User scoped agency clients"
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": "project",
+      "description": "User scoped client projects"
+    },
+    "/users/{userId}/focusSessions/{sessionId}": {
+      "schema": "focusSession",
+      "description": "User scoped focus timer sessions"
+    },
+    "/users/{userId}/distractions/{distractionId}": {
+      "schema": "distraction",
+      "description": "User scoped distraction logs"
+    }
+  }
+}
