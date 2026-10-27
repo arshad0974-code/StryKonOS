@@ -29,6 +29,7 @@ import { HabitsView } from './views/HabitsView.js';
 import { AnalyticsView } from './views/AnalyticsView.js';
 import { AiCoachView } from './views/AiCoachView.js';
 import { SettingsView } from './views/SettingsView.js';
+import { CustomSelect, type SelectOption } from './components/CustomSelect.js';
 import { calculateStreakDays } from './utils/productivity.js';
 import { ShieldAlert, X } from 'lucide-react';
 
@@ -36,7 +37,13 @@ export default function App() {
   const [currentSection, setCurrentSection] = useState<NavSection>('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('strykon_theme');
+      if (stored === 'light' || stored === 'dark') return stored;
+    }
+    return 'dark';
+  });
 
   // Core Data State
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -130,18 +137,32 @@ export default function App() {
     loadInitialData();
   }, [loadInitialData]);
 
+  // Reactively synchronize theme on <html> and <body> and localStorage
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+      document.body.classList.remove('dark');
+      document.body.classList.add('light');
+    }
+    try {
+      localStorage.setItem('strykon_theme', theme);
+    } catch (e) {}
+  }, [theme]);
+
   // Handle Theme Switch
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    const root = document.documentElement;
-    if (nextTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
     api.saveSettings({ ...settings, theme: nextTheme }).catch(() => {});
   };
+
 
   // Sync active timer from localStorage
   useEffect(() => {
@@ -357,7 +378,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen flex bg-neutral-950 text-neutral-100 ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className="min-h-screen flex bg-slate-50 dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 transition-colors duration-200">
       {/* Sidebar Navigation */}
       <Sidebar
         currentSection={currentSection}
@@ -384,6 +405,7 @@ export default function App() {
             setTaskModalOpen(true);
           }}
           onStartFocusShortcut={() => setCurrentSection('focus')}
+          onOpenAiChat={() => setCurrentSection('ai_coach')}
           activeTimerRunning={activeTimerRunning}
           activeTimerRemaining={activeTimerRemaining}
           searchQuery={searchQuery}
@@ -392,6 +414,7 @@ export default function App() {
           onToggleTheme={toggleTheme}
           streakCount={streakDays}
         />
+
 
         {/* View Routing */}
         <main className="flex-1 overflow-y-auto">
@@ -585,15 +608,15 @@ export default function App() {
       {/* Quick Distraction Modal */}
       {quickDistractionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-2xl space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShieldAlert size={18} className="text-amber-400" />
-                <h3 className="text-base font-semibold text-neutral-100">Quick Interruption Log</h3>
+                <ShieldAlert size={18} className="text-amber-500" />
+                <h3 className="text-base font-semibold text-slate-800 dark:text-neutral-100">Quick Interruption Log</h3>
               </div>
               <button
                 onClick={() => setQuickDistractionModalOpen(false)}
-                className="text-neutral-400 hover:text-neutral-200"
+                className="text-slate-400 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-200"
               >
                 <X size={16} />
               </button>
@@ -601,30 +624,30 @@ export default function App() {
 
             <form onSubmit={handleQuickDistractionSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Interruption Category</label>
-                <select
+                <CustomSelect
+                  label="Interruption Category"
                   value={quickDistCat}
-                  onChange={e => setQuickDistCat(e.target.value as DistractionCategory)}
-                  className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-                >
-                  <option value="phone">Phone / WhatsApp Ping</option>
-                  <option value="unexpected_client_fire">Unexpected Client Emergency</option>
-                  <option value="social_media">Social Media / News / Twitter</option>
-                  <option value="unclear_priorities">Unclear Priorities / Decision Fatigue</option>
-                  <option value="browse_web">Random Web Browsing</option>
-                  <option value="fatigue">Energy Slump / Fatigue</option>
-                  <option value="other">Other Friction</option>
-                </select>
+                  options={[
+                    { value: 'phone', label: 'Phone / WhatsApp Ping' },
+                    { value: 'unexpected_client_fire', label: 'Unexpected Client Emergency' },
+                    { value: 'social_media', label: 'Social Media / News / Twitter' },
+                    { value: 'unclear_priorities', label: 'Unclear Priorities / Decision Fatigue' },
+                    { value: 'browse_web', label: 'Random Web Browsing' },
+                    { value: 'fatigue', label: 'Energy Slump / Fatigue' },
+                    { value: 'other', label: 'Other Friction' },
+                  ]}
+                  onChange={val => setQuickDistCat(val as DistractionCategory)}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Trigger / Context</label>
+                <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Trigger / Context</label>
                 <input
                   type="text"
                   value={quickDistReason}
                   onChange={e => setQuickDistReason(e.target.value)}
                   placeholder="e.g. Client phoned about ad account budget..."
-                  className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-violet-500"
+                  className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-violet-500"
                 />
               </div>
 
@@ -632,13 +655,13 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setQuickDistractionModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-750 text-neutral-300 text-xs font-medium"
+                  className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-neutral-800 hover:bg-slate-200 dark:hover:bg-neutral-750 text-slate-700 dark:text-neutral-300 text-xs font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium"
+                  className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium shadow-sm"
                 >
                   Record Friction
                 </button>
@@ -647,6 +670,7 @@ export default function App() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

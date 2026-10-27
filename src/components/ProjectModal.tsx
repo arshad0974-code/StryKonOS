@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import type { Client, Project } from '../types.js';
+import { CustomSelect, type SelectOption } from './CustomSelect.js';
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -71,22 +72,38 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
     }
   };
 
+  const clientOptions: SelectOption[] = [
+    { value: '', label: 'No Client (Internal / Personal)' },
+    ...clients.map(c => ({ value: c.id, label: c.businessName })),
+  ];
+
+  const statusOptions: SelectOption[] = [
+    { value: 'planning', label: 'Planning', color: '#9333ea' },
+    { value: 'in_progress', label: 'In Progress', color: '#3b82f6' },
+    { value: 'in_review', label: 'In Review', color: '#f59e0b' },
+    { value: 'completed', label: 'Completed', color: '#10b981' },
+    { value: 'on_hold', label: 'On Hold', color: '#6b7280' },
+  ];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl overflow-hidden my-8">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
-          <h2 className="text-base font-semibold text-neutral-100">
+      <div className="relative w-full max-w-lg bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl shadow-2xl overflow-hidden my-8">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-neutral-800">
+          <h2 className="text-base font-semibold text-slate-800 dark:text-neutral-100">
             {initialProject ? 'Edit Project' : 'Create New Project'}
           </h2>
-          <button onClick={onClose} className="p-1 rounded-md text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800">
+          <button
+            onClick={onClose}
+            className="p-1 rounded-md text-slate-400 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-200 hover:bg-slate-100 dark:hover:bg-neutral-800"
+          >
             <X size={18} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
           <div>
-            <label className="block text-xs font-medium text-neutral-300 mb-1">
-              Project Name <span className="text-rose-400">*</span>
+            <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">
+              Project Name <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -94,81 +111,67 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="e.g. Q4 Meta Ads Scaling & Creative Testing"
-              className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+              className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-300 mb-1">Associated Client</label>
-            <select
+            <CustomSelect
+              label="Associated Client"
               value={clientId}
-              onChange={e => setClientId(e.target.value)}
-              style={{ colorScheme: 'dark' }}
-              className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-            >
-              <option value="" className="bg-neutral-900 text-neutral-100">No Client (Internal / Personal)</option>
-              {clients.map(c => (
-                <option key={c.id} value={c.id} className="bg-neutral-900 text-neutral-100">
-                  {c.businessName}
-                </option>
-              ))}
-            </select>
+              options={clientOptions}
+              onChange={val => setClientId(val)}
+              placeholder="Select client"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-300 mb-1">Project Scope</label>
+            <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Project Scope</label>
             <textarea
               rows={3}
               value={description}
               onChange={e => setDescription(e.target.value)}
               placeholder="Campaign deliverables, milestones, and success criteria..."
-              className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-violet-500"
+              className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-violet-500"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Start Date</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Start Date</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={e => setStartDate(e.target.value)}
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Target Deadline</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Target Deadline</label>
               <input
                 type="date"
                 value={deadline}
                 onChange={e => setDeadline(e.target.value)}
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Status</label>
-              <select
+              <CustomSelect
+                label="Status"
                 value={status}
-                onChange={e => setStatus(e.target.value as any)}
-                style={{ colorScheme: 'dark' }}
-                className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-              >
-                <option value="planning" className="bg-neutral-900 text-neutral-100">Planning</option>
-                <option value="in_progress" className="bg-neutral-900 text-neutral-100">In Progress</option>
-                <option value="in_review" className="bg-neutral-900 text-neutral-100">In Review</option>
-                <option value="completed" className="bg-neutral-900 text-neutral-100">Completed</option>
-                <option value="on_hold" className="bg-neutral-900 text-neutral-100">On Hold</option>
-              </select>
+                options={statusOptions}
+                onChange={val => setStatus(val as any)}
+              />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-neutral-800 flex items-center justify-between gap-3">
+          <div className="pt-4 border-t border-slate-200 dark:border-neutral-800 flex items-center justify-between gap-3">
             <div>
               {initialProject && onDelete && (
                 <div>
                   {showDeleteConfirm ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-rose-400">Confirm?</span>
+                      <span className="text-xs text-rose-500">Delete project?</span>
                       <button
                         type="button"
                         onClick={async () => {
@@ -176,14 +179,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                           await onDelete(initialProject.id);
                           onClose();
                         }}
-                        className="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs"
+                        className="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium"
                       >
-                        Delete
+                        Yes, Delete
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(false)}
-                        className="px-2 py-1 rounded bg-neutral-800 text-neutral-300 text-xs"
+                        className="px-2 py-1 rounded bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 text-xs"
                       >
                         Cancel
                       </button>
@@ -192,7 +195,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300"
+                      className="flex items-center gap-1.5 text-xs text-rose-500 hover:text-rose-400 px-2 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                     >
                       <Trash2 size={14} />
                       <span>Delete</span>
@@ -206,14 +209,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-750 text-neutral-300 text-xs font-medium"
+                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-neutral-800 hover:bg-slate-200 dark:hover:bg-neutral-750 text-slate-700 dark:text-neutral-300 text-xs font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium shadow-sm transition-colors disabled:opacity-50"
               >
                 {saving ? 'Saving...' : initialProject ? 'Update Project' : 'Create Project'}
               </button>

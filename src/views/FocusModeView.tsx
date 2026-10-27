@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import type { DistractionCategory, FocusSession, Task, UserSettings } from '../types.js';
 import { playFocusChime } from '../utils/productivity.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface FocusModeViewProps {
   tasks: Task[];
@@ -344,30 +345,28 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
       {/* Task & Intended Outcome Selector */}
       <div className="w-full max-w-md p-4 rounded-xl border border-neutral-800 bg-neutral-900/90 space-y-3">
         <div>
-          <label className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider mb-1">
-            Linked Deliverable / Task
-          </label>
-          <select
+          <CustomSelect
+            label="Linked Deliverable / Task"
             disabled={isRunning}
             value={activeTask?.id || ''}
-            onChange={e => {
-              const selected = tasks.find(t => t.id === e.target.value) || null;
+            options={[
+              { value: '', label: 'No specific task (General Agency Sprint)' },
+              ...tasks.filter(t => t.status !== 'completed').map(t => ({
+                value: t.id,
+                label: t.title,
+                badge: t.priority.toUpperCase(),
+              })),
+            ]}
+            onChange={val => {
+              const selected = tasks.find(t => t.id === val) || null;
               onSetActiveTask(selected);
               if (selected && !intendedOutcome) {
                 setIntendedOutcome(selected.title);
               }
             }}
-            style={{ colorScheme: 'dark' }}
-            className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500 disabled:opacity-70"
-          >
-            <option value="" className="bg-neutral-900 text-neutral-100">No specific task (General Agency Sprint)</option>
-            {tasks.filter(t => t.status !== 'completed').map(t => (
-              <option key={t.id} value={t.id} className="bg-neutral-900 text-neutral-100">
-                {t.title}
-              </option>
-            ))}
-          </select>
+          />
         </div>
+
 
         <div>
           <label className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider mb-1">
@@ -530,22 +529,22 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
 
             <form onSubmit={handleLogDistractionSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Distraction Category</label>
-                <select
+                <CustomSelect
+                  label="Distraction Category"
                   value={distractionCategory}
-                  onChange={e => setDistractionCategory(e.target.value as DistractionCategory)}
-                  style={{ colorScheme: 'dark' }}
-                  className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-                >
-                  <option value="phone" className="bg-neutral-900 text-neutral-100">Phone / WhatsApp Ping</option>
-                  <option value="unexpected_client_fire" className="bg-neutral-900 text-neutral-100">Unexpected Client Fire / Alert</option>
-                  <option value="social_media" className="bg-neutral-900 text-neutral-100">Social Media / News / Twitter</option>
-                  <option value="unclear_priorities" className="bg-neutral-900 text-neutral-100">Unclear Priorities / Decision Fatigue</option>
-                  <option value="browse_web" className="bg-neutral-900 text-neutral-100">Random Web Browsing / Tab Overload</option>
-                  <option value="fatigue" className="bg-neutral-900 text-neutral-100">Energy Slump / Fatigue</option>
-                  <option value="other" className="bg-neutral-900 text-neutral-100">Other Interruption</option>
-                </select>
+                  options={[
+                    { value: 'phone', label: 'Phone / WhatsApp Ping' },
+                    { value: 'unexpected_client_fire', label: 'Unexpected Client Fire / Alert' },
+                    { value: 'social_media', label: 'Social Media / News / Twitter' },
+                    { value: 'unclear_priorities', label: 'Unclear Priorities / Decision Fatigue' },
+                    { value: 'browse_web', label: 'Random Web Browsing / Tab Overload' },
+                    { value: 'fatigue', label: 'Energy Slump / Fatigue' },
+                    { value: 'other', label: 'Other Interruption' },
+                  ]}
+                  onChange={val => setDistractionCategory(val as DistractionCategory)}
+                />
               </div>
+
 
               <div>
                 <label className="block text-xs font-medium text-neutral-300 mb-1">Specific Trigger / Reason</label>

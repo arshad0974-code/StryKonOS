@@ -1,6 +1,6 @@
 {
-  "name": "FocusOS — Personal Productivity & Agency Management",
-  "description": "Executive productivity operating system and agency client management platform for digital marketing operators, featuring deep work timers, distraction tracking, time-blocking, and AI coaching.",
+  "name": "StrykonOS — Agency Management & Productivity Operating System",
+  "description": "Executive productivity operating system and agency client management platform for Strykon, featuring deep work timers, distraction tracking, time-blocking, and AI coaching.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

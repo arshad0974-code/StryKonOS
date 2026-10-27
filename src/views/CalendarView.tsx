@@ -10,6 +10,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import type { Task, TimeBlock, UserSettings } from '../types.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -299,38 +300,37 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Category</label>
-                <select
+                <CustomSelect
+                  label="Category"
                   value={newCategory}
-                  onChange={e => setNewCategory(e.target.value as any)}
-                  style={{ colorScheme: 'dark' }}
-                  className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-                >
-                  <option value="deep_work" className="bg-neutral-900 text-neutral-100">Deep Focus Sprint</option>
-                  <option value="client_work" className="bg-neutral-900 text-neutral-100">Client Deliverable Execution</option>
-                  <option value="outreach" className="bg-neutral-900 text-neutral-100">Sales & Pipeline Outreach</option>
-                  <option value="planning" className="bg-neutral-900 text-neutral-100">Strategy & Planning</option>
-                  <option value="admin" className="bg-neutral-900 text-neutral-100">Client Meetings / Admin</option>
-                  <option value="personal" className="bg-neutral-900 text-neutral-100">Personal</option>
-                </select>
+                  options={[
+                    { value: 'deep_work', label: 'Deep Focus Sprint', color: '#8b5cf6' },
+                    { value: 'client_work', label: 'Client Deliverable Execution', color: '#3b82f6' },
+                    { value: 'outreach', label: 'Sales & Pipeline Outreach', color: '#10b981' },
+                    { value: 'planning', label: 'Strategy & Planning', color: '#f59e0b' },
+                    { value: 'admin', label: 'Client Meetings / Admin', color: '#ec4899' },
+                    { value: 'personal', label: 'Personal', color: '#6b7280' },
+                  ]}
+                  onChange={val => setNewCategory(val as any)}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Link to Task (Optional)</label>
-                <select
+                <CustomSelect
+                  label="Link to Task (Optional)"
                   value={newTaskId}
-                  onChange={e => setNewTaskId(e.target.value)}
-                  style={{ colorScheme: 'dark' }}
-                  className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-                >
-                  <option value="" className="bg-neutral-900 text-neutral-100">None</option>
-                  {tasks.filter(t => t.status !== 'completed').map(t => (
-                    <option key={t.id} value={t.id} className="bg-neutral-900 text-neutral-100">
-                      {t.title}
-                    </option>
-                  ))}
-                </select>
+                  options={[
+                    { value: '', label: 'None' },
+                    ...tasks.filter(t => t.status !== 'completed').map(t => ({
+                      value: t.id,
+                      label: t.title,
+                      badge: t.priority.toUpperCase(),
+                    })),
+                  ]}
+                  onChange={val => setNewTaskId(val)}
+                />
               </div>
+
 
               <div className="flex justify-end gap-2.5 pt-3 border-t border-neutral-800">
                 <button

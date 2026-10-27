@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Users, Search, DollarSign, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import type { Client, Task } from '../types.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface ClientsViewProps {
   clients: Client[];
@@ -17,6 +18,14 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const statusFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'retainer', label: 'Retainer', color: '#10b981' },
+    { value: 'active', label: 'Active', color: '#3b82f6' },
+    { value: 'lead', label: 'Lead', color: '#f59e0b' },
+    { value: 'inactive', label: 'Inactive', color: '#6b7280' },
+  ];
 
   const filteredClients = clients.filter(c => {
     if (statusFilter !== 'all' && c.status !== statusFilter) return false;
@@ -78,19 +87,15 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
           />
         </div>
 
-        <select
+        <CustomSelect
+          size="sm"
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          style={{ colorScheme: 'dark' }}
-          className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-        >
-          <option value="all" className="bg-neutral-900 text-neutral-100">All Statuses</option>
-          <option value="retainer" className="bg-neutral-900 text-neutral-100">Retainer</option>
-          <option value="active" className="bg-neutral-900 text-neutral-100">Active</option>
-          <option value="lead" className="bg-neutral-900 text-neutral-100">Lead</option>
-          <option value="inactive" className="bg-neutral-900 text-neutral-100">Inactive</option>
-        </select>
+          options={statusFilterOptions}
+          onChange={val => setStatusFilter(val)}
+          className="min-w-[140px]"
+        />
       </div>
+
 
       {/* Clients Cards Grid / Empty State */}
       {filteredClients.length === 0 ? (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, FolderKanban, Calendar, Clock, CheckCircle2 } from 'lucide-react';
 import type { Client, Project, Task } from '../types.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface ProjectsViewProps {
   projects: Project[];
@@ -19,6 +20,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 }) => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const clientMap = new Map(clients.map(c => [c.id, c]));
+
+  const statusFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Project Statuses' },
+    { value: 'planning', label: 'Planning', color: '#9333ea' },
+    { value: 'in_progress', label: 'In Progress', color: '#3b82f6' },
+    { value: 'in_review', label: 'In Review', color: '#f59e0b' },
+    { value: 'completed', label: 'Completed', color: '#10b981' },
+    { value: 'on_hold', label: 'On Hold', color: '#6b7280' },
+  ];
 
   const filteredProjects = projects.filter(p => {
     if (statusFilter !== 'all' && p.status !== statusFilter) return false;
@@ -46,22 +56,17 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
       </div>
 
       {/* Filter Bar */}
-      <div className="flex items-center justify-between text-xs">
-        <select
+      <div className="flex items-center justify-between text-xs gap-4">
+        <CustomSelect
+          size="sm"
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          style={{ colorScheme: 'dark' }}
-          className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-        >
-          <option value="all" className="bg-neutral-900 text-neutral-100">All Project Statuses</option>
-          <option value="planning" className="bg-neutral-900 text-neutral-100">Planning</option>
-          <option value="in_progress" className="bg-neutral-900 text-neutral-100">In Progress</option>
-          <option value="in_review" className="bg-neutral-900 text-neutral-100">In Review</option>
-          <option value="completed" className="bg-neutral-900 text-neutral-100">Completed</option>
-          <option value="on_hold" className="bg-neutral-900 text-neutral-100">On Hold</option>
-        </select>
-        <span className="text-xs font-mono tabular-nums text-neutral-400">{filteredProjects.length} active projects</span>
+          options={statusFilterOptions}
+          onChange={val => setStatusFilter(val)}
+          className="min-w-[180px]"
+        />
+        <span className="text-xs font-mono tabular-nums text-slate-500 dark:text-neutral-400">{filteredProjects.length} active projects</span>
       </div>
+
 
       {/* Projects List / Empty State */}
       {filteredProjects.length === 0 ? (

@@ -1,43 +1,141 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  color-scheme: dark;
 }
 
 html, body {
-  color-scheme: dark;
   font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Force dark theme styling on all native select dropdowns and options */
-select {
+/* =========================================
+   LIGHT / DARK THEME BASE ADAPTATIONS
+   ========================================= */
+
+/* Dark Mode (Default) */
+html.dark {
+  color-scheme: dark;
+}
+
+/* Native select styling in Dark Mode */
+html.dark select {
   color-scheme: dark !important;
-  background-color: #171717 !important;
-  color: #f4f4f5 !important;
-}
-
-select option,
-select optgroup {
   background-color: #18181b !important;
   color: #f4f4f5 !important;
-  padding: 8px 12px !important;
+  border-color: #3f3f46 !important;
 }
 
-select option:checked {
+html.dark select option,
+html.dark select optgroup {
+  background-color: #18181b !important;
+  color: #f4f4f5 !important;
+  padding: 8px 12px;
+}
+
+html.dark select option:checked {
   background-color: #7c3aed !important;
   color: #ffffff !important;
 }
 
-select option:hover {
-  background-color: #27272a !important;
+/* Light Mode Overrides */
+html:not(.dark),
+html.light {
+  color-scheme: light;
+}
+
+html:not(.dark) body,
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Native select styling in Light Mode */
+html:not(.dark) select,
+html.light select {
+  color-scheme: light !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html:not(.dark) select option,
+html:not(.dark) select optgroup,
+html.light select option,
+html.light select optgroup {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  padding: 8px 12px;
+}
+
+html:not(.dark) select option:checked,
+html.light select option:checked {
+  background-color: #7c3aed !important;
   color: #ffffff !important;
 }
 
-@layer base {
+/* Light mode dynamic surface and text overrides for components without explicit light: classes */
+html:not(.dark) .bg-neutral-950 {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
 
-  /* Custom subtle scrollbar */
+html:not(.dark) .bg-neutral-900 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .bg-neutral-900\/95,
+html:not(.dark) .bg-neutral-900\/90,
+html:not(.dark) .bg-neutral-900\/80,
+html:not(.dark) .bg-neutral-900\/60,
+html:not(.dark) .bg-neutral-900\/50 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .bg-neutral-850 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .bg-neutral-800 {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+html:not(.dark) .bg-neutral-800\/80,
+html:not(.dark) .bg-neutral-800\/60,
+html:not(.dark) .bg-neutral-800\/40 {
+  background-color: rgba(226, 232, 240, 0.8) !important;
+  color: #1e293b !important;
+}
+
+html:not(.dark) .border-neutral-800,
+html:not(.dark) .border-neutral-750,
+html:not(.dark) .border-neutral-700 {
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .text-neutral-100,
+html:not(.dark) .text-neutral-200 {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .text-neutral-300,
+html:not(.dark) .text-neutral-400 {
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-neutral-500 {
+  color: #94a3b8 !important;
+}
+
+/* Custom subtle scrollbar */
+@layer base {
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -46,10 +144,10 @@ select option:hover {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.2);
+    background: rgba(148, 163, 184, 0.25);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.4);
+    background: rgba(148, 163, 184, 0.45);
   }
 }

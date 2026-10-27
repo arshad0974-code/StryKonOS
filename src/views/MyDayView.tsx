@@ -12,6 +12,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import type { Client, Task, TimeBlock, UserSettings } from '../types.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface MyDayViewProps {
   tasks: Task[];
@@ -148,18 +149,17 @@ export const MyDayView: React.FC<MyDayViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-xs">
-          <select
+          <CustomSelect
+            size="sm"
             value={quickClientId}
-            onChange={e => setQuickClientId(e.target.value)}
-            className="bg-neutral-850 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-          >
-            <option value="">No Client (Internal Work)</option>
-            {clients.map(c => (
-              <option key={c.id} value={c.id}>
-                {c.businessName}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: '', label: 'No Client (Internal Work)' },
+              ...clients.map(c => ({ value: c.id, label: c.businessName })),
+            ]}
+            onChange={val => setQuickClientId(val)}
+            className="min-w-[180px]"
+          />
+
 
           <div className="flex items-center gap-1.5 bg-neutral-850 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200">
             <Clock size={13} className="text-neutral-400" />

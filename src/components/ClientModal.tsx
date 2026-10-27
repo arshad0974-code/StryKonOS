@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import type { Client } from '../types.js';
+import { CustomSelect, type SelectOption } from './CustomSelect.js';
 
 interface ClientModalProps {
   isOpen: boolean;
@@ -94,14 +95,24 @@ export const ClientModal: React.FC<ClientModalProps> = ({
     }
   };
 
+  const statusOptions: SelectOption[] = [
+    { value: 'retainer', label: 'Monthly Retainer', color: '#10b981' },
+    { value: 'active', label: 'Active Project', color: '#3b82f6' },
+    { value: 'lead', label: 'Sales Lead', color: '#f59e0b' },
+    { value: 'inactive', label: 'Inactive', color: '#6b7280' },
+  ];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl overflow-hidden my-8">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
-          <h2 className="text-base font-semibold text-neutral-100">
-            {initialClient ? 'Edit Client Account' : 'Add Agency Client'}
+      <div className="relative w-full max-w-lg bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl shadow-2xl overflow-hidden my-8">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-neutral-800">
+          <h2 className="text-base font-semibold text-slate-800 dark:text-neutral-100">
+            {initialClient ? 'Edit Client Account' : 'Add New Client'}
           </h2>
-          <button onClick={onClose} className="p-1 rounded-md text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800">
+          <button
+            onClick={onClose}
+            className="p-1 rounded-md text-slate-400 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-200 hover:bg-slate-100 dark:hover:bg-neutral-800"
+          >
             <X size={18} />
           </button>
         </div>
@@ -109,101 +120,99 @@ export const ClientModal: React.FC<ClientModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
-                Business / Brand Name <span className="text-rose-400">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={businessName}
-                onChange={e => setBusinessName(e.target.value)}
-                placeholder="e.g. Apex Athletic Goods"
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
-                Primary Contact Name <span className="text-rose-400">*</span>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">
+                Contact Person <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="e.g. Marcus Brody"
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+                placeholder="e.g. John Miller"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-violet-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">
+                Business / Brand Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={businessName}
+                onChange={e => setBusinessName(e.target.value)}
+                placeholder="e.g. Velox Footwear"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-violet-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Contact Email</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Contact Email</label>
               <input
                 type="email"
                 value={contactEmail}
                 onChange={e => setContactEmail(e.target.value)}
                 placeholder="contact@brand.com"
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Contact Phone</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Contact Phone</label>
               <input
                 type="tel"
                 value={contactPhone}
                 onChange={e => setContactPhone(e.target.value)}
                 placeholder="+1 (555) 000-0000"
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Client Status</label>
-              <select
+              <CustomSelect
+                label="Client Status"
                 value={status}
-                onChange={e => setStatus(e.target.value as any)}
-                style={{ colorScheme: 'dark' }}
-                className="w-full bg-neutral-900 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 focus:outline-none focus:border-violet-500"
-              >
-                <option value="retainer" className="bg-neutral-900 text-neutral-100">Monthly Retainer</option>
-                <option value="active" className="bg-neutral-900 text-neutral-100">Active Project</option>
-                <option value="lead" className="bg-neutral-900 text-neutral-100">Sales Lead</option>
-                <option value="inactive" className="bg-neutral-900 text-neutral-100">Inactive</option>
-              </select>
+                options={statusOptions}
+                onChange={val => setStatus(val as any)}
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">Monthly Value ($)</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Monthly Value ($)</label>
               <input
                 type="number"
                 min={0}
-                step={100}
+                step={250}
                 value={monthlyValue}
                 onChange={e => setMonthlyValue(Number(e.target.value))}
-                className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 font-mono tabular-nums focus:outline-none focus:border-violet-500"
+                className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 focus:outline-none focus:border-violet-500"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-300 mb-2">Services Provided</label>
-            <div className="space-y-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-2">Agency Services Provided</label>
+            <div className="grid grid-cols-1 gap-1.5 max-h-36 overflow-y-auto p-1 bg-slate-50 dark:bg-neutral-850/60 rounded-lg border border-slate-200 dark:border-neutral-800">
               {AVAILABLE_SERVICES.map(srv => {
                 const checked = selectedServices.includes(srv);
                 return (
                   <label
                     key={srv}
-                    className="flex items-center gap-2.5 p-2 rounded-lg bg-neutral-850 border border-neutral-800 text-xs text-neutral-200 cursor-pointer hover:bg-neutral-800 transition-colors"
+                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded text-xs cursor-pointer transition-colors ${
+                      checked
+                        ? 'bg-violet-500/15 text-violet-700 dark:text-violet-300 font-medium'
+                        : 'text-slate-700 dark:text-neutral-400 hover:bg-slate-100 dark:hover:bg-neutral-800'
+                    }`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleService(srv)}
-                      className="rounded border-neutral-700 bg-neutral-800 text-violet-600 focus:ring-0"
+                      className="rounded border-slate-300 dark:border-neutral-700 text-violet-600 focus:ring-0"
                     />
-                    <span className="truncate">{srv}</span>
+                    <span>{srv}</span>
                   </label>
                 );
               })}
@@ -211,23 +220,23 @@ export const ClientModal: React.FC<ClientModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-300 mb-1">Strategic Notes</label>
+            <label className="block text-xs font-medium text-slate-700 dark:text-neutral-300 mb-1">Client Notes & Requirements</label>
             <textarea
               rows={2}
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Campaign objectives, target ROAS/CAC, communication preferences..."
-              className="w-full bg-neutral-850 border border-neutral-750 rounded-lg px-3 py-2 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-violet-500"
+              placeholder="ROAS targets, primary ad platforms, key deadlines..."
+              className="w-full bg-slate-50 dark:bg-neutral-850 border border-slate-300 dark:border-neutral-750 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-violet-500"
             />
           </div>
 
-          <div className="pt-4 border-t border-neutral-800 flex items-center justify-between gap-3">
+          <div className="pt-4 border-t border-slate-200 dark:border-neutral-800 flex items-center justify-between gap-3">
             <div>
               {initialClient && onDelete && (
                 <div>
                   {showDeleteConfirm ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-rose-400">Confirm?</span>
+                      <span className="text-xs text-rose-500">Delete client?</span>
                       <button
                         type="button"
                         onClick={async () => {
@@ -235,14 +244,14 @@ export const ClientModal: React.FC<ClientModalProps> = ({
                           await onDelete(initialClient.id);
                           onClose();
                         }}
-                        className="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs"
+                        className="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium"
                       >
-                        Delete
+                        Yes, Delete
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(false)}
-                        className="px-2 py-1 rounded bg-neutral-800 text-neutral-300 text-xs"
+                        className="px-2 py-1 rounded bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 text-xs"
                       >
                         Cancel
                       </button>
@@ -251,7 +260,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300"
+                      className="flex items-center gap-1.5 text-xs text-rose-500 hover:text-rose-400 px-2 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                     >
                       <Trash2 size={14} />
                       <span>Delete</span>
@@ -265,16 +274,16 @@ export const ClientModal: React.FC<ClientModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-750 text-neutral-300 text-xs font-medium"
+                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-neutral-800 hover:bg-slate-200 dark:hover:bg-neutral-750 text-slate-700 dark:text-neutral-300 text-xs font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium shadow-sm transition-colors disabled:opacity-50"
               >
-                {saving ? 'Saving...' : initialClient ? 'Update Client' : 'Save Client'}
+                {saving ? 'Saving...' : initialClient ? 'Update Client' : 'Add Client'}
               </button>
             </div>
           </div>

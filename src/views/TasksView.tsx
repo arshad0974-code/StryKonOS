@@ -15,6 +15,7 @@ import {
   Play,
 } from 'lucide-react';
 import type { Client, Project, Task, TaskCategory, TaskPriority, TaskStatus } from '../types.js';
+import { CustomSelect, type SelectOption } from '../components/CustomSelect.js';
 
 interface TasksViewProps {
   tasks: Task[];
@@ -44,6 +45,49 @@ export const TasksView: React.FC<TasksViewProps> = ({
   const [sortBy, setSortBy] = useState<'priority' | 'deadline' | 'title' | 'duration'>('priority');
 
   const clientMap = new Map(clients.map(c => [c.id, c]));
+
+  const categoryFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'client', label: 'Client Work' },
+    { value: 'personal', label: 'Personal / Internal' },
+  ];
+
+  const clientFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Clients' },
+    ...clients.map(c => ({ value: c.id, label: c.businessName })),
+  ];
+
+  const priorityFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Priorities' },
+    { value: 'critical', label: 'Critical (P1)', color: '#ef4444' },
+    { value: 'high', label: 'High (P2)', color: '#f97316' },
+    { value: 'medium', label: 'Medium (P3)', color: '#3b82f6' },
+    { value: 'low', label: 'Low (P4)', color: '#10b981' },
+  ];
+
+  const statusFilterOptions: SelectOption[] = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'backlog', label: 'Backlog' },
+    { value: 'todo', label: 'To Do' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'in_review', label: 'In Review' },
+    { value: 'completed', label: 'Completed' },
+  ];
+
+  const sortByOptions: SelectOption[] = [
+    { value: 'priority', label: 'Sort: Priority' },
+    { value: 'deadline', label: 'Sort: Deadline' },
+    { value: 'duration', label: 'Sort: Duration' },
+    { value: 'title', label: 'Sort: Title' },
+  ];
+
+  const taskStatusOptions: SelectOption[] = [
+    { value: 'backlog', label: 'Backlog' },
+    { value: 'todo', label: 'To Do' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'in_review', label: 'In Review' },
+    { value: 'completed', label: 'Completed' },
+  ];
 
   // Filtering
   const filteredTasks = tasks.filter(task => {
@@ -168,76 +212,53 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Category Filter */}
-          <select
+          <CustomSelect
+            size="sm"
             value={categoryFilter}
-            onChange={e => setCategoryFilter(e.target.value as any)}
-            style={{ colorScheme: 'dark' }}
-            className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-          >
-            <option value="all" className="bg-neutral-900 text-neutral-100">All Categories</option>
-            <option value="client" className="bg-neutral-900 text-neutral-100">Client Work</option>
-            <option value="personal" className="bg-neutral-900 text-neutral-100">Personal / Internal</option>
-          </select>
+            options={categoryFilterOptions}
+            onChange={val => setCategoryFilter(val as any)}
+            className="min-w-[130px]"
+          />
 
           {/* Client Filter */}
-          <select
+          <CustomSelect
+            size="sm"
             value={clientFilter}
-            onChange={e => setClientFilter(e.target.value)}
-            style={{ colorScheme: 'dark' }}
-            className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-          >
-            <option value="all" className="bg-neutral-900 text-neutral-100">All Clients</option>
-            {clients.map(c => (
-              <option key={c.id} value={c.id} className="bg-neutral-900 text-neutral-100">
-                {c.businessName}
-              </option>
-            ))}
-          </select>
+            options={clientFilterOptions}
+            onChange={val => setClientFilter(val)}
+            className="min-w-[130px]"
+          />
 
           {/* Priority Filter */}
-          <select
+          <CustomSelect
+            size="sm"
             value={priorityFilter}
-            onChange={e => setPriorityFilter(e.target.value)}
-            style={{ colorScheme: 'dark' }}
-            className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-          >
-            <option value="all" className="bg-neutral-900 text-neutral-100">All Priorities</option>
-            <option value="critical" className="bg-neutral-900 text-neutral-100">Critical (P1)</option>
-            <option value="high" className="bg-neutral-900 text-neutral-100">High (P2)</option>
-            <option value="medium" className="bg-neutral-900 text-neutral-100">Medium (P3)</option>
-            <option value="low" className="bg-neutral-900 text-neutral-100">Low (P4)</option>
-          </select>
+            options={priorityFilterOptions}
+            onChange={val => setPriorityFilter(val)}
+            className="min-w-[130px]"
+          />
 
           {/* Status Filter (in List View) */}
           {viewMode === 'list' && (
-            <select
+            <CustomSelect
+              size="sm"
               value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              style={{ colorScheme: 'dark' }}
-              className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-            >
-              <option value="all" className="bg-neutral-900 text-neutral-100">All Statuses</option>
-              <option value="backlog" className="bg-neutral-900 text-neutral-100">Backlog</option>
-              <option value="todo" className="bg-neutral-900 text-neutral-100">To Do</option>
-              <option value="in_progress" className="bg-neutral-900 text-neutral-100">In Progress</option>
-              <option value="in_review" className="bg-neutral-900 text-neutral-100">In Review</option>
-              <option value="completed" className="bg-neutral-900 text-neutral-100">Completed</option>
-            </select>
+              options={statusFilterOptions}
+              onChange={val => setStatusFilter(val)}
+              className="min-w-[130px]"
+            />
           )}
 
           {/* Sort By */}
-          <select
+          <CustomSelect
+            size="sm"
             value={sortBy}
-            onChange={e => setSortBy(e.target.value as any)}
-            style={{ colorScheme: 'dark' }}
-            className="bg-neutral-900 border border-neutral-750 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-violet-500"
-          >
-            <option value="priority" className="bg-neutral-900 text-neutral-100">Sort: Priority</option>
-            <option value="deadline" className="bg-neutral-900 text-neutral-100">Sort: Deadline</option>
-            <option value="duration" className="bg-neutral-900 text-neutral-100">Sort: Duration</option>
-            <option value="title" className="bg-neutral-900 text-neutral-100">Sort: Title</option>
-          </select>
+            options={sortByOptions}
+            onChange={val => setSortBy(val as any)}
+            className="min-w-[130px]"
+          />
         </div>
+
       </div>
 
       {/* Views: List or Kanban */}
@@ -320,17 +341,15 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
                   {/* Actions & Status Dropdown */}
                   <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
-                    <select
+                    <CustomSelect
+                      size="sm"
                       value={task.status}
-                      onChange={e => handleUpdateStatus(task, e.target.value as TaskStatus)}
-                      className="bg-neutral-850 border border-neutral-750 rounded-lg px-2.5 py-1 text-xs text-neutral-200 capitalize focus:outline-none focus:border-violet-500"
-                    >
-                      <option value="backlog">Backlog</option>
-                      <option value="todo">To Do</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="in_review">In Review</option>
-                      <option value="completed">Completed</option>
-                    </select>
+                      options={taskStatusOptions}
+                      onChange={val => handleUpdateStatus(task, val as TaskStatus)}
+                      className="w-32"
+                    />
+
+
 
                     {!isDone && (
                       <button
@@ -399,20 +418,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                         </div>
 
                         {/* Quick Kanban Move Select */}
-                        <div className="pt-1 flex items-center justify-between gap-1">
-                          <select
+                        <div className="pt-1">
+                          <CustomSelect
+                            size="sm"
                             value={task.status}
-                            onChange={e => handleUpdateStatus(task, e.target.value as TaskStatus)}
-                            style={{ colorScheme: 'dark' }}
-                            className="w-full bg-neutral-900 border border-neutral-750 rounded px-1.5 py-0.5 text-[10px] text-neutral-300 focus:outline-none"
-                          >
-                            <option value="backlog" className="bg-neutral-900 text-neutral-100">Move: Backlog</option>
-                            <option value="todo" className="bg-neutral-900 text-neutral-100">Move: To Do</option>
-                            <option value="in_progress" className="bg-neutral-900 text-neutral-100">Move: In Progress</option>
-                            <option value="in_review" className="bg-neutral-900 text-neutral-100">Move: In Review</option>
-                            <option value="completed" className="bg-neutral-900 text-neutral-100">Move: Completed</option>
-                          </select>
+                            options={taskStatusOptions}
+                            onChange={val => handleUpdateStatus(task, val as TaskStatus)}
+                            className="w-full text-[11px]"
+                          />
                         </div>
+
                       </div>
                     );
                   })}
